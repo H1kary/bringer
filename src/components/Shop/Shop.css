@@ -1,0 +1,175 @@
+.shop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(3px);
+  z-index: 1000;
+}
+
+.shop-container {
+  background: linear-gradient(to bottom, #2c3e50, #34495e);
+  padding: 25px;
+  border-radius: 15px;
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 20px rgba(255,215,0,0.2);
+  width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #ffd700 #2c3e50; /* Firefox */
+  padding-right: 8px; /* Отступ для скроллбара */
+}
+
+.shop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #ffd700;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  transition: all 0.3s ease;
+}
+
+.close-button:hover {
+  transform: scale(1.1);
+  color: #ff6b6b;
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.shop-item {
+  position: relative;
+  padding: 15px;
+  background: linear-gradient(to bottom, #34495e, #2c3e50);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.shop-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.item-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 3px rgba(255,215,0,0.3));
+}
+
+.item-name {
+  font-size: 14px;
+  color: #ecf0f1;
+  margin-bottom: 5px;
+  font-family: 'MedievalSharp', cursive;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.item-price {
+  font-size: 12px;
+  color: #ffd700;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.buy-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: 1px solid #ffd700;
+  background: linear-gradient(to bottom, #27ae60, #2ecc71);
+  color: white;
+  cursor: pointer;
+  font-family: 'MedievalSharp', cursive;
+  transition: all 0.3s ease;
+}
+
+.buy-button:disabled {
+  background: linear-gradient(to bottom, #7f8c8d, #95a5a6);
+  cursor: not-allowed;
+}
+
+.buy-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Стили для Webkit (Chrome, Safari, Edge) */
+.shop-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.shop-container::-webkit-scrollbar-track {
+  background: #2c3e50;
+  border-radius: 4px;
+  margin: 4px;
+}
+
+.shop-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #ffd700, #ffa500);
+  border-radius: 4px;
+  border: 2px solid #2c3e50;
+}
+
+.shop-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #ffe44d, #ffb732);
+}
+
+.item-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.item-stat {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #ecf0f1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.item-stat.negative {
+  background: linear-gradient(to bottom, #c0392b, #e74c3c);
+  color: #fff;
+}
+
+.item-stat.healing {
+  background: linear-gradient(to bottom, #e74c3c, #c0392b);
+  color: white;
+}
+
+.item-type {
+  font-size: 11px;
+  color: #ffd700;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-top: 5px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+} 
