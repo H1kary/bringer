@@ -1,0 +1,84 @@
+.found-save-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.found-save-container {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  padding: 30px;
+  border-radius: 15px;
+  border: 2px solid #ffd700;
+  text-align: center;
+  color: #ecf0f1;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+  animation: slideDown 0.5s ease-out;
+}
+
+.found-save-container h2 {
+  color: #ffd700;
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-family: 'MedievalSharp', cursive;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.found-save-container p {
+  font-size: 18px;
+  margin-bottom: 30px;
+  color: #ecf0f1;
+}
+
+.found-save-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.continue-button, .new-game-button {
+  padding: 15px 30px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-family: 'MedievalSharp', cursive;
+  transition: all 0.3s ease;
+}
+
+.continue-button {
+  background: linear-gradient(to bottom, #27ae60, #2ecc71);
+}
+
+.new-game-button {
+  background: linear-gradient(to bottom, #e74c3c, #c0392b);
+}
+
+.continue-button:hover, .new-game-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+} 

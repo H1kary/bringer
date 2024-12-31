@@ -7,6 +7,7 @@ import Shop from './components/Shop/Shop';
 import HikeResults from './components/HikeResults/HikeResults';
 import ChooseLocation from './components/ChooseLocation/ChooseLocation';
 import GameOver from './components/GameOver/GameOver';
+import FoundSave from './components/FoundSave/FoundSave';
 
 // Определяем possibleItems вне компонента
 const POSSIBLE_ITEMS = [
@@ -167,9 +168,10 @@ function App() {
   const [currentLocation, setCurrentLocation] = useState('forest');
   const [autoHikeTime, setAutoHikeTime] = useState(null);
   const [health, setHealth] = useState(100);
-  const maxHealth = 100;
+  const [maxHealth, setMaxHealth] = useState(100);
   const baseHealthRegen = 0.2; // Базовое восстановление здоровья в секунду
   const [isGameOver, setIsGameOver] = useState(false);
+  const [showFoundSave, setShowFoundSave] = useState(false);
 
   // Рассчитываем общий бонус к восстановлению здоровья от экипировки
   const totalHealthRegen = useMemo(() => {
@@ -490,11 +492,134 @@ function App() {
     }
   }, [hikeResults]);
 
+  // Проверяем сохранение при запуске
+  useEffect(() => {
+    console.log('Инициализация приложения');
+    const savedState = localStorage.getItem('gameState');
+    
+    if (!savedState) {
+      console.log('Сохранение не найдено, начинаем новую игру');
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(savedState);
+      console.log('Найдено сохранение:', parsed);
+      
+      // Проверяем, есть ли в сохранении какой-то прогресс
+      const hasProgress = 
+        parsed.gold > 0 || 
+        (parsed.items && parsed.items.length > 0) || 
+        (parsed.equipment && Object.keys(parsed.equipment).length > 0) || 
+        parsed.health !== 100;
+
+      if (hasProgress) {
+        console.log('Найден прогресс, показываем диалог');
+        setShowFoundSave(true);
+      } else {
+        console.log('Прогресс не найден, начинаем новую игру');
+        startNewGame();
+      }
+    } catch (error) {
+      console.error('Ошибка при проверке сохранения:', error);
+      startNewGame();
+    }
+  }, []);
+
+  // Загрузка сохранения
+  const loadGame = () => {
+    console.log('Загружаем сохранение');
+    const savedState = localStorage.getItem('gameState');
+    
+    if (!savedState) {
+      console.error('Сохранение не найдено при загрузке');
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(savedState);
+      console.log('Загружаем состояние:', parsed);
+
+      // Загружаем все состояния
+      setHealth(parsed.health ?? 100);
+      setMaxHealth(parsed.maxHealth ?? 100);
+      setGold(parsed.gold ?? 0);
+      setItems(parsed.items ?? []);
+      setEquipment(parsed.equipment ?? {});
+      setCurrentLocation(parsed.currentLocation ?? 'forest');
+      setIsHiking(false); // Всегда начинаем не в походе
+      setHikeEndTime(null);
+      setAutoHikeTime(null);
+      setIsGameOver(false);
+
+      // Закрываем диалог сохранения
+      setShowFoundSave(false);
+
+      console.log('Сохранение успешно загружено');
+    } catch (error) {
+      console.error('Ошибка при загрузке сохранения:', error);
+      startNewGame();
+    }
+  };
+
+  // Новая игра
+  const startNewGame = () => {
+    console.log('Начинаем новую игру');
+    localStorage.removeItem('gameState');
+    
+    setHealth(100);
+    setMaxHealth(100);
+    setGold(0);
+    setItems([]);
+    setEquipment({});
+    setCurrentLocation('forest');
+    setIsHiking(false);
+    setHikeEndTime(null);
+    setAutoHikeTime(null);
+    setIsGameOver(false);
+    setShowFoundSave(false);
+  };
+
+  // Сохранение игры
+  const saveGame = useCallback(() => {
+    if (showFoundSave) {
+      console.log('Пропускаем сохранение во время показа диалога');
+      return;
+    }
+
+    const gameState = {
+      health,
+      maxHealth,
+      gold,
+      items,
+      equipment,
+      currentLocation,
+      isHiking,
+      hikeEndTime: hikeEndTime?.getTime(),
+      autoHikeTime
+    };
+
+    try {
+      localStorage.setItem('gameState', JSON.stringify(gameState));
+      console.log('Игра сохранена');
+    } catch (error) {
+      console.error('Ошибка при сохранении:', error);
+    }
+  }, [health, maxHealth, gold, items, equipment, currentLocation, isHiking, hikeEndTime, autoHikeTime, showFoundSave]);
+
+  // Автосохранение
+  useEffect(() => {
+    if (!showFoundSave && health > 0) {
+      const timer = setTimeout(saveGame, 1000); // Сохраняем с небольшой задержкой
+      return () => clearTimeout(timer);
+    }
+  }, [saveGame, showFoundSave, health]);
+
   return (
     <div className="app-container">
       <div className="interface-container">
         <Character
-          onHikeClick={handleHikeClick}
+          onHikeClick={() => setIsHikeOpen(true)}
           equipment={equipment}
           isHiking={isHiking}
           onCancelHike={cancelHike}
@@ -543,6 +668,18 @@ function App() {
         locations={locations}
       />
       {isGameOver && <GameOver onRestart={handleRestart} />}
+      {showFoundSave && (
+        <FoundSave
+          onContinue={() => {
+            console.log('Нажата кнопка продолжить');
+            loadGame();
+          }}
+          onNewGame={() => {
+            console.log('Нажата кнопка новой игры');
+            startNewGame();
+          }}
+        />
+      )}
     </div>
   );
 }
